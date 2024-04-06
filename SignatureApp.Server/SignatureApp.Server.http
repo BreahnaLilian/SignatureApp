@@ -1,0 +1,6 @@
+@SignatureApp.Server_HostAddress = http://localhost:5127
+
+GET {{SignatureApp.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
