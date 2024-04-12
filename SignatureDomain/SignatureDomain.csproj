@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\SignatureCommon\SignatureCommon.csproj" />
+  </ItemGroup>
+
 </Project>

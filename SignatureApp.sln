@@ -19,7 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signature.WebAPI", "Signature.WebAPI\Signature.WebAPI.csproj", "{971F2004-96D1-4907-9E0E-DAB554F2531A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignaturePersistance", "SignaturePersistance\SignaturePersistance.csproj", "{0AB5987E-2C72-4915-ADE4-8BED06E3C843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignaturePersistance", "SignaturePersistance\SignaturePersistance.csproj", "{0AB5987E-2C72-4915-ADE4-8BED06E3C843}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2AC20C33-A439-42E8-8615-560F1F9ECFC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6EF7FF23-57BA-41C4-A0F3-371C54BE154D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignatureCommon", "..\SignatureCommon\SignatureCommon.csproj", "{83378969-DCB9-4D07-968A-AB810A82C72E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +53,14 @@ Global
 		{0AB5987E-2C72-4915-ADE4-8BED06E3C843}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AB5987E-2C72-4915-ADE4-8BED06E3C843}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AB5987E-2C72-4915-ADE4-8BED06E3C843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AC20C33-A439-42E8-8615-560F1F9ECFC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC20C33-A439-42E8-8615-560F1F9ECFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AC20C33-A439-42E8-8615-560F1F9ECFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC20C33-A439-42E8-8615-560F1F9ECFC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83378969-DCB9-4D07-968A-AB810A82C72E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83378969-DCB9-4D07-968A-AB810A82C72E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83378969-DCB9-4D07-968A-AB810A82C72E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83378969-DCB9-4D07-968A-AB810A82C72E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +71,7 @@ Global
 		{B03F4549-8531-43FE-BA15-160ADB91D8E5} = {90892035-20EE-411B-A563-73D6985BA881}
 		{971F2004-96D1-4907-9E0E-DAB554F2531A} = {935E2C2E-1413-4440-B2AC-2126C7348790}
 		{0AB5987E-2C72-4915-ADE4-8BED06E3C843} = {90892035-20EE-411B-A563-73D6985BA881}
+		{83378969-DCB9-4D07-968A-AB810A82C72E} = {6EF7FF23-57BA-41C4-A0F3-371C54BE154D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7DF3483-5603-4290-A377-DC75D817086D}

@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  signature.webapi:
+    image: ${DOCKER_REGISTRY-}signaturewebapi
+    build:
+      context: .
+      dockerfile: Signature.WebAPI/Dockerfile
+    ports:
+    - "5000:5000"
+    - "5001:5001"
+

@@ -1,5 +1,5 @@
 ﻿using SignatureDomain.Common;
-using static SignatureDomain.Common.Enums;
+using static SignatureCommon.Enums;
 
 namespace SignatureDomain.Entities
 {
