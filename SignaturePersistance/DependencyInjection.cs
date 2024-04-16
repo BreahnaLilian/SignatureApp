@@ -11,9 +11,10 @@ namespace SignaturePersistance
         {
 
             services.AddDbContext<SignatureDBContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("RiskConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("SignatureDatabase")));
 
-
+            services.AddStackExchangeRedisCache(options =>
+            options.Configuration = configuration.GetConnectionString("SignatureCache"));
 
             return services;
         }
