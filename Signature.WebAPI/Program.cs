@@ -1,6 +1,7 @@
 using SignatureApplication;
 using SignatureInfrastructure;
 using Serilog;
+using SignaturePersistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddApplication()
     .AddInfrastructure();
+
+builder.Services.AddInfrastructure();
+builder.Services.AddPersitance(builder.Configuration);
 
 builder.Host.UseSerilog((context, configuration) => 
 configuration.ReadFrom.Configuration(context.Configuration));

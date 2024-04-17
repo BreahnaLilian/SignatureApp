@@ -1,6 +1,4 @@
-﻿using SignatureDomain.Common;
-
-namespace SignatureDomain.Entities
+﻿namespace SignatureDomain.Entities
 {
     public class SignatureFilesToUsers
     {

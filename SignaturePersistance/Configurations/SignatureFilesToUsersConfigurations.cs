@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SignatureDomain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SignaturePersistance.Configurations
 {
@@ -14,6 +9,14 @@ namespace SignaturePersistance.Configurations
         public void Configure(EntityTypeBuilder<SignatureFilesToUsers> builder)
         {
             builder.HasKey(x => new { x.UserId, x.FileId });
+
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.SignatureFilesToUsers)
+                .HasForeignKey(x => x.UserId);
+
+            builder.HasOne(x => x.File)
+                .WithMany(x => x.SignatureFilesToUsers)
+                .HasForeignKey(x => x.FileId);
 
         }
     }

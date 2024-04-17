@@ -52,9 +52,6 @@ namespace SignaturePersistance.Configurations
                 .IsRequired()
                 .HasDefaultValue(UserStatus.Active);
 
-            builder.HasMany(x => x.AssignedFiles)
-                .WithMany(x => x.AssignedUsers);
-
             builder.HasData(SeedConfiguration.User1,
                 SeedConfiguration.User2,
                 SeedConfiguration.User3);

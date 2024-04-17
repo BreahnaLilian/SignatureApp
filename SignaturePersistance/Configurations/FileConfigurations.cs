@@ -34,9 +34,6 @@ namespace SignaturePersistance.Configurations
                 .IsRequired(true)
                 .HasDefaultValue(FileStatus.New);
 
-            builder.HasMany(x => x.AssignedUsers)
-                .WithMany(x => x.AssignedFiles);
-
             //builder.HasData();
         }
     }

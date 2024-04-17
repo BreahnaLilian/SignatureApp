@@ -13,6 +13,6 @@ namespace SignatureDomain.Entities
         public FileStatus Stauts { get; set; }
         public int SignedBy { get; set; }
 
-        public ICollection<User> AssignedUsers { get; set; }
+        public ICollection<SignatureFilesToUsers> SignatureFilesToUsers { get; set; } = new HashSet<SignatureFilesToUsers>();
     }
 }

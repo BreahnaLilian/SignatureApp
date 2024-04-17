@@ -16,6 +16,6 @@ namespace SignatureDomain.Entities
         public string Address { get; set; }
         public UserStatus Status { get; set; }
 
-        public ICollection<File> AssignedFiles { get; set; }
+        public ICollection<SignatureFilesToUsers> SignatureFilesToUsers { get; set; } = new HashSet<SignatureFilesToUsers>();
     }
 }
