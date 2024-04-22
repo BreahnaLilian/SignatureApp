@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
+using SignatureDomain.Common;
 using SignatureDomain.Entities;
-using SignaturePersistance.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SignaturePersistance
 {
@@ -18,6 +13,36 @@ namespace SignaturePersistance
         public DbSet<User> Users { get; set; }
         public DbSet<SignatureDomain.Entities.File> Files { get; set; }
         public DbSet<SignatureFilesToUsers> SignatureFilesToUsers { get; set; }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entry in base.ChangeTracker.Entries<BaseEntity>())
+            {
+                if (entry.Entity is AuditableEntity auditable)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            auditable.CreateDate = DateTime.Now;
+                            break;
+
+                        case EntityState.Modified:
+                            auditable.LastModified = DateTime.Now;
+                            break;
+                    }
+                }
+
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.Id = Guid.NewGuid();
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

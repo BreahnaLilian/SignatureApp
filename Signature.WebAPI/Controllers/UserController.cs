@@ -7,8 +7,9 @@ namespace Signature.WebAPI.Controllers
     [Route("[controller]")]
     public class UserController : BaseController
     {
+
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(CancellationToken cancellationToken)
         {
             try
             {
@@ -21,7 +22,7 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpGet("User")]
-        public async Task<IActionResult> GetUser(Guid id)
+        public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken)
         {
             try
             {
@@ -34,11 +35,17 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpPost("User")]
-        public async Task<IActionResult> CreateUser(CreateUserViewModel createUserViewModel)
+        public async Task<IActionResult> CreateUser(CreateUserViewModel createUserViewModel, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                return CreateJsonError("Input is not valid");
+            }
+
             try
             {
-                throw new NotImplementedException();
+                await Mediator.Send(createUserViewModel, cancellationToken);
+                return CreateJsonOk();
             }
             catch (Exception ex)
             {
@@ -47,11 +54,17 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpPut("User")]
-        public async Task<IActionResult> UpdateUser(UpdateUserViewModel updateUserViewModel)
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel updateUserViewModel, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                return CreateJsonError("Input is not valid");
+            }
+
             try
             {
-                throw new NotImplementedException();
+                await Mediator.Send(updateUserViewModel, cancellationToken);
+                return CreateJsonOk();
             }
             catch (Exception ex)
             {
@@ -60,7 +73,7 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpDelete("User")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
         {
             try
             {

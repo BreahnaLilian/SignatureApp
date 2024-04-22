@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SignatureCommon.Models.JsonResponseModels;
 using static SignatureCommon.Enums;
 
@@ -6,6 +7,10 @@ namespace Signature.WebAPI.Controllers
 {
     public class BaseController : Controller
     {
+        private IMediator mediator;
+
+        protected IMediator Mediator => mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+
         protected virtual IActionResult CreateJsonOk(string message = null, bool showToast = false)
         {
             return Json(new BaseJsonResponse { Result = ExecutionResult.OK, Message = message, ShowToast = showToast });
