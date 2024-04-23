@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SignatureApplication.Users.Query.GetUserDetails;
+using SignatureApplication.Users.Query.GetUserList;
 using SignatureApplication.Users.ViewModels;
 
 namespace Signature.WebAPI.Controllers
@@ -13,7 +15,8 @@ namespace Signature.WebAPI.Controllers
         {
             try
             {
-                throw new NotImplementedException();
+                UsersViewModel usersListViewModel = await Mediator.Send(new GetUserListQuery() { }, cancellationToken);
+                return CreateJsonOk(usersListViewModel);
             }
             catch (Exception ex)
             {
@@ -22,11 +25,12 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpGet("User")]
-        public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DetailsUser(Guid id, CancellationToken cancellationToken)
         {
             try
             {
-                throw new NotImplementedException();
+                DetailsUserViewModel detailsUserViewModel = await Mediator.Send(new GetUserDetailsQuery() { Id = id }, cancellationToken);
+                return CreateJsonOk(detailsUserViewModel);
             }
             catch (Exception ex)
             {
@@ -72,17 +76,17 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("User")]
-        public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
-        }
+        //[HttpDelete("User")]
+        //public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return CreateJsonException(ex);
+        //    }
+        //}
     }
 }
