@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SignatureCommon\SignatureCommon.csproj" />
+    <ProjectReference Include="..\SignatureCommon\SignatureCommon.csproj" />
   </ItemGroup>
 
 </Project>

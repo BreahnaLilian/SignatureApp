@@ -33,8 +33,6 @@ namespace SignaturePersistance.Configurations
             builder.Property(x => x.Stauts)
                 .IsRequired(true)
                 .HasDefaultValue(FileStatus.New);
-
-            //builder.HasData();
         }
     }
 }
