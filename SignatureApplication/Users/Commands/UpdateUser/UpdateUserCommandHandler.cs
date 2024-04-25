@@ -10,6 +10,11 @@ namespace SignatureApplication.Users.Commands.UpdateUser
     {
         private readonly ISignatureDbContext context;
 
+        public UpdateUserCommandHandler(ISignatureDbContext context)
+        {
+            this.context = context;
+        }
+
         async Task IRequestHandler<UpdateUserViewModel>.Handle(UpdateUserViewModel request, CancellationToken cancellationToken)
         {
             string email = request.Email.Trim().ToLower();
