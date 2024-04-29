@@ -5,7 +5,7 @@ using SignatureApplication.Users.ViewModels;
 
 namespace Signature.WebAPI.Controllers
 {
-    [ApiController]
+    //[ApiController]
     [Route("[controller]")]
     public class UserController : BaseController
     {
@@ -43,7 +43,7 @@ namespace Signature.WebAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return CreateJsonError("Input is not valid");
+                return CreateJsonNotValid(ModelState, true);
             }
 
             try
@@ -62,7 +62,7 @@ namespace Signature.WebAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return CreateJsonError("Input is not valid");
+                return CreateJsonNotValid(ModelState, true);
             }
 
             try

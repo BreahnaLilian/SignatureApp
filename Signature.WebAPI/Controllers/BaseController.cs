@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SignatureCommon.Models.JsonResponseModels;
 using static SignatureCommon.Enums;
 
@@ -29,6 +30,21 @@ namespace Signature.WebAPI.Controllers
         protected virtual IActionResult CreateJsonKo(string message = null)
         {
             return Json(new BaseJsonResponse { Result = ExecutionResult.KO, Message = message });
+        }
+
+        protected virtual IActionResult CreateJsonNotValid(ModelStateDictionary keyValuePairs, bool showToast = false)
+        {
+            Dictionary<string, string> errors = new();
+
+            foreach (var item in keyValuePairs)
+            {
+                if (item.Value.ValidationState == ModelValidationState.Invalid)
+                {
+                    errors.Add(item.Key, string.Join("\n", item.Value.Errors.Select(x => x.ErrorMessage)));
+                }
+            }
+
+            return Json(new ValidationJsonResponse { Result = ExecutionResult.NOTVALID, Message = "One or more validation errors occurred.", Errors = errors, ShowToast = showToast });
         }
 
         protected virtual IActionResult CreateJsonError(string message = null)
