@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
+using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Users.ViewModels;
 using SignatureDomain.Entities;
 
@@ -8,17 +9,19 @@ namespace SignatureApplication.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserViewModel>
     {
-        private readonly ISignatureDbContext context;
-        public CreateUserCommandHandler(ISignatureDbContext context)
+        private readonly ISignatureDbContext signatureDbContext;
+        private readonly ICacheService cacheService;
+        public CreateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
         {
-            this.context = context;
+            this.signatureDbContext = signatureDbContext;
+            this.cacheService = cacheService;
         }
 
         async Task IRequestHandler<CreateUserViewModel>.Handle(CreateUserViewModel request, CancellationToken cancellationToken)
         {
             string email = request.Email.Trim().ToLower();
 
-            User existingUser = await this.context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Trim() == email, cancellationToken);
+            User existingUser = await signatureDbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Trim() == email, cancellationToken);
             if (existingUser != null)
             {
                 throw new NotImplementedException();
@@ -40,8 +43,10 @@ namespace SignatureApplication.Users.Commands.CreateUser
                 Status = SignatureCommon.Enums.UserStatus.Inactive,
             };
 
-            this.context.Entry(user).State = EntityState.Added;
-            await this.context.SaveChangesAsync(cancellationToken);
+            cacheService.RemoveData("users", cancellationToken);
+
+            signatureDbContext.Entry(user).State = EntityState.Added;
+            await signatureDbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

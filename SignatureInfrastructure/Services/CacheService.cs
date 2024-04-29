@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using SignatureApplication.Common.Interfaces;
 using System.Text.Json;
 
@@ -8,14 +7,13 @@ namespace SignatureInfrastructure.Services
     public class CacheService : ICacheService
     {
         private readonly IDistributedCache distributedCache;
-        IDatabase database;
 
         public CacheService(IDistributedCache distributedCache)
         {
             this.distributedCache = distributedCache;
         }
 
-        public T GetData<T>(string key)
+        public T GetData<T>(string key, CancellationToken cancellationToken)
         {
             var value = distributedCache.GetString(key);
 
@@ -27,7 +25,7 @@ namespace SignatureInfrastructure.Services
             return default;
         }
 
-        public object RemoveData(string key)
+        public object RemoveData(string key, CancellationToken cancellationToken)
         {
             var exists = distributedCache.GetString(key);
 
@@ -39,10 +37,13 @@ namespace SignatureInfrastructure.Services
             return false;
         }
 
-        public bool SetData<T>(string key, T value, DateTimeOffset expirationTime)
+        public bool SetData<T>(string key, T value, DateTimeOffset expirationTime, CancellationToken cancellationToken)
         {
             var expiryDate = expirationTime.DateTime.Subtract(DateTime.Now);
-            distributedCache.SetString(key,JsonSerializer.Serialize(value));
+            distributedCache.SetString(key, JsonSerializer.Serialize(value), new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = expiryDate,
+            });
 
             return true;
         }

@@ -17,11 +17,9 @@ namespace SignatureApplication.Users.Query.GetUserList
         }
         public async Task<UsersViewModel> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
+            List<UserVm> userList = cacheService.GetData<List<UserVm>>("users", cancellationToken);
 
-            List<UserVm> userList = new List<UserVm>();
-            userList = cacheService.GetData<List<UserVm>>("users");
-
-            if(userList == null && userList.Count() <= 0)
+            if (userList == null || userList.Count() <= 0)
             {
                 userList = await signatureDbContext.Users
                     .Select(x => new UserVm
@@ -33,7 +31,7 @@ namespace SignatureApplication.Users.Query.GetUserList
                         Status = x.Status,
                     }).ToListAsync();
                 var expiryDate = DateTimeOffset.Now.AddSeconds(30);
-                cacheService.SetData("users", userList, expiryDate);
+                cacheService.SetData("users", userList, expiryDate, cancellationToken);
             }
 
             var usersViewModel = new UsersViewModel()

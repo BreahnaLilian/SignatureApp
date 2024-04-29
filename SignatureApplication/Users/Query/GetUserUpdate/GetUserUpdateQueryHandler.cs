@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
+using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Users.ViewModels;
 
 namespace SignatureApplication.Users.Query.GetUserUpdate
@@ -8,15 +9,22 @@ namespace SignatureApplication.Users.Query.GetUserUpdate
     public class GetUserUpdateQueryHandler : IRequestHandler<GetUserUpdateQuery, UpdateUserViewModel>
     {
         private readonly ISignatureDbContext signatureDbContext;
+        private readonly ICacheService cacheService;
 
-        public GetUserUpdateQueryHandler(ISignatureDbContext signatureDbContext)
+        public GetUserUpdateQueryHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
         {
             this.signatureDbContext = signatureDbContext;
+            this.cacheService = cacheService;
         }
 
         public async Task<UpdateUserViewModel> Handle(GetUserUpdateQuery request, CancellationToken cancellationToken)
         {
-            UpdateUserViewModel updateUserViewModel = await signatureDbContext.Users
+
+            UpdateUserViewModel updateUserViewModel = cacheService.GetData<UpdateUserViewModel>("user_" + request.Id, cancellationToken);
+
+            if(updateUserViewModel == null)
+            {
+                updateUserViewModel = await signatureDbContext.Users
                 .Where(x => x.Id == request.Id)
                 .Select(x => new UpdateUserViewModel()
                 {
@@ -31,6 +39,10 @@ namespace SignatureApplication.Users.Query.GetUserUpdate
                     PhoneNumber = x.PhoneNumber,
                     Status = x.Status,
                 }).FirstOrDefaultAsync();
+
+                var expiryDate = DateTimeOffset.Now.AddSeconds(30);
+                cacheService.SetData("user_" + request.Id, updateUserViewModel, expiryDate, cancellationToken);
+            }
 
             return updateUserViewModel;
         }
