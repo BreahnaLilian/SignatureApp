@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Signature.WebAPI.Controllers
 {
@@ -6,6 +7,12 @@ namespace Signature.WebAPI.Controllers
     [Route("[controller]")]
     public class CurrentUserController : BaseController
     {
+        private IMediator mediator;
+        public CurrentUserController(IMediator mediator) : base(mediator)
+        {
+            this.mediator = mediator;
+        }
+
         [HttpGet("CurrentUser")]
         public async Task<IActionResult> GetCurrentUser(Guid id)
         {

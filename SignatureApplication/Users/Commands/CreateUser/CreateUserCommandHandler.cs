@@ -38,7 +38,7 @@ namespace SignatureApplication.Users.Commands.CreateUser
                 Gender = request.Gender,
                 IDNP = request.IDNP,
                 LastModified = DateTime.Now,
-                Password = request.Password,
+                Password = "",
                 PhoneNumber = request.PhoneNumber,
                 Status = SignatureCommon.Enums.UserStatus.Inactive,
             };

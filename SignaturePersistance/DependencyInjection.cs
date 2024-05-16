@@ -13,6 +13,12 @@ namespace SignaturePersistance
             services.AddDbContext<SignatureDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("SignatureDatabase")));
 
+            //if (!string.IsNullOrWhiteSpace(configuration.GetConnectionString("SignatureDatabasePostgreSQL")))
+            //{
+            //    services.AddDbContext<SignatureDbContext>(options =>
+            //    options.UseNpgsql(configuration.GetConnectionString("SignatureDatabasePostgreSQL")));
+            //}
+
             services.AddStackExchangeRedisCache(options =>
             options.Configuration = configuration.GetConnectionString("SignatureCache"));
 

@@ -42,8 +42,8 @@ namespace SignatureApplication.Users.ViewModels
             RuleFor(x => x.Gender)
                 .NotNull();
 
-            RuleFor(x => x.Status)
-                .NotNull();
+            //RuleFor(x => x.Status)
+            //    .NotNull();
         }
     }
 }

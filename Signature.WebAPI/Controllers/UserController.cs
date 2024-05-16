@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SignatureApplication.Users.Query.GetUserDetails;
 using SignatureApplication.Users.Query.GetUserList;
 using SignatureApplication.Users.ViewModels;
@@ -9,13 +10,18 @@ namespace Signature.WebAPI.Controllers
     [Route("[controller]")]
     public class UserController : BaseController
     {
+        private IMediator mediator;
+        public UserController(IMediator mediator) : base(mediator)
+        {
+            this.mediator = mediator;
+        }
 
         [HttpGet("Users")]
         public async Task<IActionResult> GetUsers(CancellationToken cancellationToken)
         {
             try
             {
-                UsersViewModel usersListViewModel = await Mediator.Send(new GetUserListQuery() { }, cancellationToken);
+                UsersViewModel usersListViewModel = await mediator.Send(new GetUserListQuery() { }, cancellationToken);
                 return CreateJsonOk(usersListViewModel);
             }
             catch (Exception ex)
@@ -27,9 +33,14 @@ namespace Signature.WebAPI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> DetailsUser(Guid id, CancellationToken cancellationToken)
         {
+            if(id == Guid.Empty)
+            {
+                return CreateJsonError("Id must be valid");
+            }
+
             try
             {
-                DetailsUserViewModel detailsUserViewModel = await Mediator.Send(new GetUserDetailsQuery() { Id = id }, cancellationToken);
+                DetailsUserViewModel detailsUserViewModel = await mediator.Send(new GetUserDetailsQuery() { Id = id }, cancellationToken);
                 return CreateJsonOk(detailsUserViewModel);
             }
             catch (Exception ex)
@@ -48,7 +59,7 @@ namespace Signature.WebAPI.Controllers
 
             try
             {
-                await Mediator.Send(createUserViewModel, cancellationToken);
+                await mediator.Send(createUserViewModel, cancellationToken);
                 return CreateJsonOk();
             }
             catch (Exception ex)
@@ -67,7 +78,7 @@ namespace Signature.WebAPI.Controllers
 
             try
             {
-                await Mediator.Send(updateUserViewModel, cancellationToken);
+                await mediator.Send(updateUserViewModel, cancellationToken);
                 return CreateJsonOk();
             }
             catch (Exception ex)

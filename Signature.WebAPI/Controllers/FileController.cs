@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Signature.WebAPI.Controllers
 {
@@ -6,6 +7,12 @@ namespace Signature.WebAPI.Controllers
     [Route("[controller]")]
     public class FileController : BaseController
     {
+        private IMediator mediator;
+        public FileController(IMediator mediator) : base(mediator)
+        {
+            this.mediator = mediator;
+        }
+
         [HttpGet("Files")]
         public async Task<IActionResult> GetFiles()
         {

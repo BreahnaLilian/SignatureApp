@@ -10,7 +10,10 @@ namespace Signature.WebAPI.Controllers
     {
         private IMediator mediator;
 
-        protected IMediator Mediator => mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        public BaseController(IMediator mediator)
+        {
+            this.mediator = mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        }
 
         protected virtual IActionResult CreateJsonOk(string message = null, bool showToast = false)
         {
