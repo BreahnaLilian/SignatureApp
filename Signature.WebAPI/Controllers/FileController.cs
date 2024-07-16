@@ -40,10 +40,20 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpPost("File")]
-        public async Task<IActionResult> CreateFile()
+        public async Task<IActionResult> CreateFile(IFormFile formFile)
         {
             try
             {
+                if (formFile.Length > 0)
+                {
+                    var filePath = Path.GetTempFileName();
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+
                 throw new NotImplementedException();
             }
             catch (Exception ex)
@@ -53,7 +63,7 @@ namespace Signature.WebAPI.Controllers
         }
 
         [HttpPut("File")]
-        public async Task<IActionResult> UpdateFile(FormCollection keyValuePairs)
+        public async Task<IActionResult> UpdateFile(IFormFileCollection formFiles)
         {
             try
             {

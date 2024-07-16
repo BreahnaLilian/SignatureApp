@@ -16,4 +16,9 @@
     <ProjectReference Include="..\SignatureDomain\SignatureDomain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\Commands\UpdateFile\" />
+    <Folder Include="Files\Query\GetFilesList\" />
+  </ItemGroup>
+
 </Project>
