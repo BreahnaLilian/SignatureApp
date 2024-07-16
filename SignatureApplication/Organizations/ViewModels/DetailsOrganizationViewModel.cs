@@ -1,10 +1,10 @@
-﻿using MediatR;
-using static SignatureCommon.Enums;
+﻿using static SignatureCommon.Enums;
 
 namespace SignatureApplication.Organizations.ViewModels
 {
-    public class CreateOrganizationViewModel : IRequest
+    public class DetailsOrganizationViewModel
     {
+        public Guid Id { get; set; }
         public string IDNO { get; set; }
         public string CommercialName { get; set; }
         public string JuridicalName { get; set; }

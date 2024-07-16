@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
@@ -10,12 +11,13 @@ namespace SignatureApplication.Users.Query.GetUserDetails
     {
         private readonly ISignatureDbContext signatureDbContext;
         private readonly ICacheService cacheService;
+        private readonly IMapper mapper;
 
-
-        public GetUserDetailsQueryHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
+        public GetUserDetailsQueryHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService, IMapper mapper)
         {
             this.signatureDbContext = signatureDbContext;
             this.cacheService = cacheService;
+            this.mapper = mapper;
         }
         public async Task<DetailsUserViewModel> Handle(GetUserDetailsQuery request, CancellationToken cancellationToken)
         {
@@ -24,20 +26,7 @@ namespace SignatureApplication.Users.Query.GetUserDetails
 
             if (detailsUserViewModel == null)
             {
-                detailsUserViewModel = await signatureDbContext.Users
-                    .Where(x => x.Id == request.Id)
-                    .Select(x => new DetailsUserViewModel
-                    {
-                        Address = x.Address,
-                        DateOfBirth = x.DateOfBirth,
-                        Email = x.Email,
-                        FirstName = x.FirstName,
-                        Gender = x.Gender,
-                        IDNP = x.IDNP,
-                        LastName = x.LastName,
-                        PhoneNumber = x.PhoneNumber,
-                        Status = x.Status
-                    }).FirstOrDefaultAsync();
+                detailsUserViewModel = mapper.Map<DetailsUserViewModel>(await signatureDbContext.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken));
 
                 var expiryDate = DateTimeOffset.Now.AddSeconds(30);
                 cacheService.SetData("user_" + request.Id, detailsUserViewModel, expiryDate, cancellationToken);

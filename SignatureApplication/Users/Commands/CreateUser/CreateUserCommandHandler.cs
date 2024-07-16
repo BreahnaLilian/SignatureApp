@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
@@ -11,10 +12,13 @@ namespace SignatureApplication.Users.Commands.CreateUser
     {
         private readonly ISignatureDbContext signatureDbContext;
         private readonly ICacheService cacheService;
-        public CreateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
+        private readonly IMapper mapper;
+
+        public CreateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService, IMapper mapper)
         {
             this.signatureDbContext = signatureDbContext;
             this.cacheService = cacheService;
+            this.mapper = mapper;
         }
 
         async Task IRequestHandler<CreateUserViewModel>.Handle(CreateUserViewModel request, CancellationToken cancellationToken)
@@ -27,26 +31,18 @@ namespace SignatureApplication.Users.Commands.CreateUser
                 throw new NotImplementedException();
             }
 
-            User user = new User()
-            {
-                Email = email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Address = request.Address,
-                CreateDate = DateTime.Now,
-                DateOfBirth = request.DateOfBirth,
-                Gender = request.Gender,
-                IDNP = request.IDNP,
-                LastModified = DateTime.Now,
-                Password = "",
-                PhoneNumber = request.PhoneNumber,
-                Status = SignatureCommon.Enums.UserStatus.Inactive,
-            };
+            User user = mapper.Map<User>(request);
+
+            user.Password = Hash.GetHashSHA256(ApiKeyGenerator.GeneratePassword(12));
+            user.Status = SignatureCommon.Enums.UserStatus.New;
 
             cacheService.RemoveData("users", cancellationToken);
 
             signatureDbContext.Entry(user).State = EntityState.Added;
             await signatureDbContext.SaveChangesAsync(cancellationToken);
+
+            //TODO: Add event that will send email with password to user
+
         }
     }
 }

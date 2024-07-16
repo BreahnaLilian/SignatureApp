@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Signature.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CurrentUserController : BaseController
     {
         private IMediator mediator;
@@ -13,7 +13,7 @@ namespace Signature.WebAPI.Controllers
             this.mediator = mediator;
         }
 
-        [HttpGet("CurrentUser")]
+        [HttpGet]
         public async Task<IActionResult> GetCurrentUser(Guid id)
         {
             try
@@ -26,7 +26,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpPut("CurrentUser")]
+        [HttpPut]
         public async Task<IActionResult> UpdateCurrentUser(FormCollection keyValuePairs)
         {
             try

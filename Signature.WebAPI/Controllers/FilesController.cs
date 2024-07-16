@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Signature.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class FileController : BaseController
+    [Route("api/[controller]")]
+    public class FilesController : BaseController
     {
         private IMediator mediator;
-        public FileController(IMediator mediator) : base(mediator)
+        public FilesController(IMediator mediator) : base(mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet("Files")]
+        [HttpGet]
         public async Task<IActionResult> GetFiles()
         {
             try
@@ -26,7 +26,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpGet("File")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetFile(Guid id)
         {
             try
@@ -39,7 +39,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpPost("File")]
+        [HttpPost]
         public async Task<IActionResult> CreateFile(IFormFile formFile)
         {
             try
@@ -62,7 +62,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpPut("File")]
+        [HttpPut]
         public async Task<IActionResult> UpdateFile(IFormFileCollection formFiles)
         {
             try
@@ -75,7 +75,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("File")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteFile(Guid id)
         {
             try

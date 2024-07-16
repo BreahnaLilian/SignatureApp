@@ -6,8 +6,6 @@ namespace SignaturePersistance.Configurations
 {
     public class SeedConfiguration
     {
-        private static readonly Hash hash = new Hash();
-
         #region Organizations
         public static readonly Organization Organization1 = new Organization()
         {
@@ -32,7 +30,7 @@ namespace SignaturePersistance.Configurations
             Email = "admin@lvbgroup.com",
             PhoneNumber = "69000001",
             IDNP = "0000000000001",
-            Password = hash.GetHashSHA256("Admin"),
+            Password = Hash.GetHashSHA256("Admin"),
             DateOfBirth = DateTime.Now,
             CreateDate = DateTime.Now,
             Address = "Planet Earth",
@@ -50,7 +48,7 @@ namespace SignaturePersistance.Configurations
             Email = "user@lvbgroup.com",
             PhoneNumber = "69000002",
             IDNP = "0000000000002",
-            Password = hash.GetHashSHA256("User"),
+            Password = Hash.GetHashSHA256("User"),
             DateOfBirth = DateTime.Now,
             CreateDate = DateTime.Now,
             Address = "Planet Earth",
@@ -68,7 +66,7 @@ namespace SignaturePersistance.Configurations
             Email = "user@lvbgroup.com",
             PhoneNumber = "69000003",
             IDNP = "0000000000003",
-            Password = hash.GetHashSHA256("User"),
+            Password = Hash.GetHashSHA256("User"),
             DateOfBirth = DateTime.Now,
             CreateDate = DateTime.Now,
             Address = "Planet Earth",

@@ -2,13 +2,17 @@
 
 namespace SignatureApplication.Organizations.ViewModels
 {
-    public class CreateOrganizationViewModelValidator : AbstractValidator<CreateOrganizationViewModel>
+    public class UpdateOrganizationViewModelValidator : AbstractValidator<UpdateOrganizationViewModel>
     {
         const string idnpRegex = "^[0-9]";
         const string phoneNrRegex = "^[0-9]";
 
-        public CreateOrganizationViewModelValidator()
+        public UpdateOrganizationViewModelValidator()
         {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .NotNull();
+
             RuleFor(x => x.CommercialName)
                 .NotNull()
                 .MaximumLength(50);

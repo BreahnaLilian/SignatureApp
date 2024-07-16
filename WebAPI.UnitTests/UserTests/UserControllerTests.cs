@@ -11,12 +11,12 @@ namespace WebAPI.UnitTests.UserTests
     public class UserControllerTests
     {
         private readonly IMediator _iMediator;
-        private readonly UserController _userController;
+        private readonly UsersController _userController;
         private readonly CancellationToken _cancellationToken;
         public UserControllerTests()
         {
             _iMediator = A.Fake<IMediator>();
-            _userController = new UserController(_iMediator);
+            _userController = new UsersController(_iMediator);
             _cancellationToken = new CancellationToken();
         }
 

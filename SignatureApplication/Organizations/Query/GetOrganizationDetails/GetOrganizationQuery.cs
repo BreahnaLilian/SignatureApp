@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using SignatureApplication.Organizations.ViewModels;
 
 namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 {
-    public class GetOrganizationQuery
+    public class GetOrganizationQuery : IRequest<DetailsOrganizationViewModel>
     {
+        public Guid Id { get; set; }
     }
 }

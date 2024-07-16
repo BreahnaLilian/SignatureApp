@@ -1,12 +1,11 @@
-﻿using SignatureApplication.Common.Interfaces;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace SignatureApplication.Common
 {
-    public class Hash : IHashingService
+    public static class Hash
     {
-        public string GetHashSHA256(string input)
+        public static string GetHashSHA256(string input)
         {
             SHA256 hashAlgorithm = SHA256.Create();
             // Convert the input string to a byte array and compute the hash.
@@ -27,7 +26,7 @@ namespace SignatureApplication.Common
             return sBuilder.ToString();
         }
 
-        public bool VerifyHashSHA256(string input, string hash)
+        public static bool VerifyHashSHA256(string input, string hash)
         {
             var hashOfInput = GetHashSHA256(input);
 

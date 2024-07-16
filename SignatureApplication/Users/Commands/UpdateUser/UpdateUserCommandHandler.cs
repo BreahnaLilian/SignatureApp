@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
@@ -11,11 +12,13 @@ namespace SignatureApplication.Users.Commands.UpdateUser
     {
         private readonly ISignatureDbContext signatureDbContext;
         private readonly ICacheService cacheService;
+        private readonly IMapper mapper;
 
-        public UpdateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
+        public UpdateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService, IMapper mapper)
         {
             this.signatureDbContext = signatureDbContext;
             this.cacheService = cacheService;
+            this.mapper = mapper;
         }
 
         async Task IRequestHandler<UpdateUserViewModel>.Handle(UpdateUserViewModel request, CancellationToken cancellationToken)
@@ -28,21 +31,7 @@ namespace SignatureApplication.Users.Commands.UpdateUser
                 throw new NotImplementedException();
             }
 
-            User user = new User()
-            {
-                Email = email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Address = request.Address,
-                CreateDate = DateTime.Now,
-                DateOfBirth = request.DateOfBirth,
-                Gender = request.Gender,
-                IDNP = request.IDNP,
-                LastModified = DateTime.Now,
-                Password = request.Password,
-                PhoneNumber = request.PhoneNumber,
-                Status = SignatureCommon.Enums.UserStatus.Inactive,
-            };
+            User user = mapper.Map<User>(request);
 
             cacheService.RemoveData("users", cancellationToken);
             cacheService.RemoveData("user_" + request.Id, cancellationToken);

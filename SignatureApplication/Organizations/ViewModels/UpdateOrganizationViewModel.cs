@@ -3,8 +3,9 @@ using static SignatureCommon.Enums;
 
 namespace SignatureApplication.Organizations.ViewModels
 {
-    public class CreateOrganizationViewModel : IRequest
+    public class UpdateOrganizationViewModel : IRequest
     {
+        public Guid Id { get; set; }
         public string IDNO { get; set; }
         public string CommercialName { get; set; }
         public string JuridicalName { get; set; }

@@ -11,6 +11,7 @@ namespace SignatureApplication
 
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
 
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddValidatorsFromAssembly(assembly);
 
             return services;

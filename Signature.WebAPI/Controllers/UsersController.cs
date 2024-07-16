@@ -7,16 +7,16 @@ using SignatureApplication.Users.ViewModels;
 namespace Signature.WebAPI.Controllers
 {
     //[ApiController]
-    [Route("[controller]")]
-    public class UserController : BaseController
+    [Route("api/[controller]")]
+    public class UsersController : BaseController
     {
         private IMediator mediator;
-        public UserController(IMediator mediator) : base(mediator)
+        public UsersController(IMediator mediator) : base(mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpGet("Users")]
+        [HttpGet]
         public async Task<IActionResult> GetUsers(CancellationToken cancellationToken)
         {
             try
@@ -30,7 +30,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpGet("User")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> DetailsUser(Guid id, CancellationToken cancellationToken)
         {
             if(id == Guid.Empty)
@@ -49,7 +49,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpPost("User")]
+        [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel createUserViewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -68,7 +68,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        [HttpPut("User")]
+        [HttpPut]
         public async Task<IActionResult> UpdateUser(UpdateUserViewModel updateUserViewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace Signature.WebAPI.Controllers
             }
         }
 
-        //[HttpDelete("User")]
+        //[HttpDelete]
         //public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
         //{
         //    try

@@ -23,6 +23,7 @@
             New = 0,
             Active = 1,
             Inactive = 2,
+            Deleted = -1,
         }
 
 
@@ -31,21 +32,23 @@
             Admin = 0,
             OrganizationAdmin = 1,
             OrganizationManager = 2,
-            User
+            User = 3
         }
         public enum FileStatus
         {
             New = 0,
             Signed = 1,
             Unsigned = 2,
-            Inactive = 3
+            Inactive = 3,
+            Deleted = -1,
         }
 
         public enum OrganizationStatus
         {
             New = 0,
             Active = 1,
-            Inactive = 2
+            Inactive = 2,
+            Deleted = -1,
         }
     }
 }
