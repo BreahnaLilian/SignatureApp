@@ -11,7 +11,7 @@ namespace SignaturePersistance.Configurations
         #region Organizations
         public static readonly Organization Organization1 = new Organization()
         {
-            Id = Guid.NewGuid(),
+            Id = new Guid("9EE896EE-CB8A-4DF4-949B-B6FCC81D76F2"),
             CommercialName="LVBGroup",
             JuridicalName="LVBGroup",
             IDNO = "0000000000001",
@@ -26,7 +26,7 @@ namespace SignaturePersistance.Configurations
         #region Users
         public static readonly User User1 = new User()
         {
-            Id = Guid.NewGuid(),
+            Id = new Guid("E631E603-266C-462A-87D3-F606C8111559"),
             FirstName = "First",
             LastName = "User",
             Email = "admin@lvbgroup.com",
@@ -44,7 +44,7 @@ namespace SignaturePersistance.Configurations
         
         public static readonly User User2 = new User()
         {
-            Id = Guid.NewGuid(),
+            Id = new Guid("61D001AB-1553-4B8A-AF2A-379D1540ED5A"),
             FirstName = "Second",
             LastName = "User",
             Email = "user@lvbgroup.com",
@@ -62,7 +62,7 @@ namespace SignaturePersistance.Configurations
         
         public static readonly User User3 = new User()
         {
-            Id = Guid.NewGuid(),
+            Id = new Guid("1F7BDDDE-FE95-4F29-878D-8E6EFCA243F1"),
             FirstName = "Third",
             LastName = "User",
             Email = "user@lvbgroup.com",
