@@ -4,7 +4,7 @@ using SignatureDomain.Entities;
 
 namespace SignaturePersistance.Configurations
 {
-    public class SignatureFilesToUsersConfigurations : IEntityTypeConfiguration<SignatureFilesToUsers>
+    public class SignatureFilesToUsersConfiguration : IEntityTypeConfiguration<SignatureFilesToUsers>
     {
         public void Configure(EntityTypeBuilder<SignatureFilesToUsers> builder)
         {

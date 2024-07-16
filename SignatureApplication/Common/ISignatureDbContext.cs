@@ -9,6 +9,7 @@ namespace SignatureApplication.Common
     {
         DbSet<User> Users { get; set; }
         DbSet<File> Files { get; set; }
+        DbSet<Organization> Organizations { get; set; }
         DbSet<SignatureFilesToUsers> SignatureFilesToUsers { get; set; }
 
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;

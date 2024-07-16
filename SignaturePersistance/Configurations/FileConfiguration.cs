@@ -4,7 +4,7 @@ using static SignatureCommon.Enums;
 
 namespace SignaturePersistance.Configurations
 {
-    public class FileConfigurations : IEntityTypeConfiguration<SignatureDomain.Entities.File>
+    public class FileConfiguration : IEntityTypeConfiguration<SignatureDomain.Entities.File>
     {
         public void Configure(EntityTypeBuilder<SignatureDomain.Entities.File> builder)
         {

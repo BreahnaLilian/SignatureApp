@@ -10,6 +10,9 @@ namespace SignaturePersistance.Configurations
         public delegate void ResultCallback(int response);
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasIndex(x => x.Id)
+                .IsUnique();
+            
             builder.HasKey(x => x.Id)
                 .IsClustered(false);
 

@@ -9,7 +9,7 @@ namespace SignaturePersistance
     {
         public SignatureDbContext(DbContextOptions<SignatureDbContext> options) : base(options) { }
 
-
+        public DbSet<Organization> Organizations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<SignatureDomain.Entities.File> Files { get; set; }
         public DbSet<SignatureFilesToUsers> SignatureFilesToUsers { get; set; }
@@ -57,6 +57,7 @@ namespace SignaturePersistance
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+
             optionsBuilder.EnableSensitiveDataLogging(true);
         }
     }

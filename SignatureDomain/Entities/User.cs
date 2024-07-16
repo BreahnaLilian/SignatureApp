@@ -15,7 +15,10 @@ namespace SignatureDomain.Entities
         public Gender Gender { get; set; }
         public string Address { get; set; }
         public UserStatus Status { get; set; }
+        public UserRole Role { get; set; }
 
+        public Guid OrganizationId { get; set; }
+        public Organization Organization { get; set; }
         public ICollection<SignatureFilesToUsers> SignatureFilesToUsers { get; set; } = new HashSet<SignatureFilesToUsers>();
     }
 }
