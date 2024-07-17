@@ -6,7 +6,7 @@ using SignatureApplication.Users.ViewModels;
 
 namespace Signature.WebAPI.Controllers;
 
-//[ApiController]
+[ApiController]
 [Route("api/[controller]")]
 public class UsersController : BaseController
 {

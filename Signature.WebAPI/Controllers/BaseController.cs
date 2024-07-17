@@ -35,17 +35,15 @@ public class BaseController : Controller
         return Json(new BaseJsonResponse { Result = ExecutionResult.KO, Message = message });
     }
 
-    protected virtual IActionResult CreateJsonNotValid(ModelStateDictionary keyValuePairs, bool showToast = false)
+    protected virtual IActionResult CreateJsonNotValid(ModelStateDictionary keyValuePairs, bool showToast = false) 
     {
-        Dictionary<string, string> errors = new();
-
-        foreach (var item in keyValuePairs)
+        var errors = ModelState
+        .Where(e => e.Value.Errors.Count > 0)
+        .Select(e => new A
         {
-            if (item.Value.ValidationState == ModelValidationState.Invalid)
-            {
-                errors.Add(item.Key, string.Join("\n", item.Value.Errors.Select(x => x.ErrorMessage)));
-            }
-        }
+            Name = e.Key,
+            Message = e.Value.Errors.First().ErrorMessage
+        }).ToArray();
 
         return Json(new ValidationJsonResponse { Result = ExecutionResult.NOTVALID, Message = "One or more validation errors occurred.", Errors = errors, ShowToast = showToast });
     }

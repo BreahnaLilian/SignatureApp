@@ -1,7 +1,12 @@
-﻿namespace SignatureCommon.Models.JsonResponseModels
+﻿namespace SignatureCommon.Models.JsonResponseModels;
+
+public class ValidationJsonResponse : BaseJsonResponse
 {
-    public class ValidationJsonResponse : BaseJsonResponse
-    {
-        public Dictionary<string, string> Errors { get; set; }
-    }
+    public A[] Errors { get; set; }
+}
+
+public class A
+{
+    public string Name { get; set; }
+    public string Message { get; set; }
 }
