@@ -1,45 +1,40 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
-using SignatureApplication.Users.ViewModels;
+using SignatureDomain.Entities;
 
 namespace SignatureApplication.Users.Query.GetUserList
 {
-    public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, UsersViewModel>
+    public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, List<UserVm>>
     {
         private readonly ISignatureDbContext signatureDbContext;
         private readonly ICacheService cacheService;
-        public GetUserListQueryHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService)
+        private readonly IMapper mapper;
+
+        public GetUserListQueryHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService, IMapper mapper)
         {
             this.signatureDbContext = signatureDbContext;
             this.cacheService = cacheService;
+            this.mapper = mapper;
         }
-        public async Task<UsersViewModel> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+
+        public async Task<List<UserVm>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
             List<UserVm> userList = cacheService.GetData<List<UserVm>>("users", cancellationToken);
 
             if (userList == null || userList.Count() <= 0)
             {
-                userList = await signatureDbContext.Users
-                    .Select(x => new UserVm
-                    {
-                        Id = x.Id,
-                        FirstName = x.FirstName,
-                        LastName = x.LastName,
-                        Email = x.Email,
-                        Status = x.Status,
-                    }).ToListAsync();
+                List<User> userDb = await signatureDbContext.Users.ToListAsync(cancellationToken);
+
+                userList = mapper.Map<List<UserVm>>(userDb);
+
                 var expiryDate = DateTimeOffset.Now.AddSeconds(30);
                 cacheService.SetData("users", userList, expiryDate, cancellationToken);
             }
 
-            var usersViewModel = new UsersViewModel()
-            {
-                Users = userList
-            };
-
-            return usersViewModel;
+            return userList;
         }
     }
 }

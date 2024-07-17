@@ -25,6 +25,18 @@ namespace SignatureInfrastructure.Services
             return default;
         }
 
+        public async Task<T> GetDataAsync<T>(string key, CancellationToken cancellationToken) where T : class
+        {
+            var value = await distributedCache.GetStringAsync(key);
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                return JsonSerializer.Deserialize<T>(value);
+            }
+
+            return default;
+        }
+
         public object RemoveData(string key, CancellationToken cancellationToken)
         {
             var exists = distributedCache.GetString(key);

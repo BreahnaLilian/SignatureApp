@@ -1,91 +1,90 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Signature.WebAPI.Controllers
+namespace Signature.WebAPI.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class FilesController : BaseController
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FilesController : BaseController
+    private IMediator mediator;
+    public FilesController(IMediator mediator) : base(mediator)
     {
-        private IMediator mediator;
-        public FilesController(IMediator mediator) : base(mediator)
-        {
-            this.mediator = mediator;
-        }
+        this.mediator = mediator;
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFiles()
+    [HttpGet]
+    public async Task<IActionResult> GetFiles()
+    {
+        try
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
+            throw new NotImplementedException();
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetFile(Guid id)
+        catch (Exception ex)
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
+            return CreateJsonException(ex);
         }
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateFile(IFormFile formFile)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetFile(Guid id)
+    {
+        try
         {
-            try
+            throw new NotImplementedException();
+        }
+        catch (Exception ex)
+        {
+            return CreateJsonException(ex);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateFile(IFormFile formFile)
+    {
+        try
+        {
+            if (formFile.Length > 0)
             {
-                if (formFile.Length > 0)
+                var filePath = Path.GetTempFileName();
+
+                using (var stream = System.IO.File.Create(filePath))
                 {
-                    var filePath = Path.GetTempFileName();
-
-                    using (var stream = System.IO.File.Create(filePath))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
+                    await formFile.CopyToAsync(stream);
                 }
+            }
 
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
+            throw new NotImplementedException();
         }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateFile(IFormFileCollection formFiles)
+        catch (Exception ex)
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
+            return CreateJsonException(ex);
         }
+    }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteFile(Guid id)
+    [HttpPut]
+    public async Task<IActionResult> UpdateFile(IFormFileCollection formFiles)
+    {
+        try
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception ex)
-            {
-                return CreateJsonException(ex);
-            }
+            throw new NotImplementedException();
+        }
+        catch (Exception ex)
+        {
+            return CreateJsonException(ex);
+        }
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteFile(Guid id)
+    {
+        try
+        {
+            throw new NotImplementedException();
+        }
+        catch (Exception ex)
+        {
+            return CreateJsonException(ex);
         }
     }
 }

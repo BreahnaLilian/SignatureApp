@@ -3,7 +3,7 @@ using SignatureApplication.Organizations.ViewModels;
 
 namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 {
-    public class GetOrganizationQuery : IRequest<DetailsOrganizationViewModel>
+    public class GetOrganizationDetailsQuery : IRequest<DetailsOrganizationViewModel>
     {
         public Guid Id { get; set; }
     }

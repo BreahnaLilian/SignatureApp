@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Organizations.ViewModels;
 
 namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 {
-    public class GetOrganizationQueryHandler : IRequestHandler<GetOrganizationQuery, DetailsOrganizationViewModel>
+    public class GetOrganizationQueryHandler : IRequestHandler<GetOrganizationDetailsQuery, DetailsOrganizationViewModel>
     {
         private readonly ISignatureDbContext signatureDbContext;
         private readonly ICacheService cacheService;
@@ -19,13 +20,13 @@ namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
             this.mapper = mapper;
         }
 
-        public async Task<DetailsOrganizationViewModel> Handle(GetOrganizationQuery request, CancellationToken cancellationToken)
+        public async Task<DetailsOrganizationViewModel> Handle(GetOrganizationDetailsQuery request, CancellationToken cancellationToken)
         {
             DetailsOrganizationViewModel detailsOrganizationViewModel = cacheService.GetData<DetailsOrganizationViewModel>("organization_" + request.Id, cancellationToken);
 
             if (detailsOrganizationViewModel == null)
             {
-                detailsOrganizationViewModel = mapper.Map<DetailsOrganizationViewModel>(await signatureDbContext.Organizations.FirstOrDefault(x => x.Id == request.Id, , cancellationToken);
+                detailsOrganizationViewModel = mapper.Map<DetailsOrganizationViewModel>(await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken));
 
                 var expiriyDate = DateTimeOffset.Now.AddSeconds(30);
                 cacheService.SetData("organization_" + request.Id, detailsOrganizationViewModel, expiriyDate, cancellationToken);
