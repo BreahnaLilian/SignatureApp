@@ -1,40 +1,17 @@
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Signature.WebAPI.API;
+using Signature.WebAPI.Swagger;
 using SignatureApplication;
 using SignatureInfrastructure;
 using SignaturePersistance;
 using System.Text.Json.Serialization;
-using static SignatureCommon.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options =>
-    {
-        options.InvalidModelStateResponseFactory = context =>
-    {
-        var errors = context.ModelState
-        .Where(e => e.Value.Errors.Count > 0)
-        .Select(e => new
-        {
-            Name = e.Key,
-            Message = e.Value.Errors.First().ErrorMessage
-        }).ToArray();
-
-        var responseObj = new
-        {
-            Result = ExecutionResult.NOTVALID,
-            Message = "One or more validation errors occurred.",
-            Errors = errors,
-            ShowToast = true,
-        };
-
-        return new OkObjectResult(responseObj);
-    };
-    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -47,10 +24,12 @@ builder.Services
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// Use the new Swagger configuration
 
 builder.Services
+    .AddSwagger()
+    .AddApiKeyBehavior()
+    //.AddBasicAuthApiBehavior()
     .AddApplication()
     .AddInfrastructure()
     .AddPersitance(builder.Configuration);
@@ -64,13 +43,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.DisplayRequestDuration(); // This shows request duration in the UI
+        c.ShowExtensions();         // This shows extensions (e.g., `x-` fields)
+        c.DefaultModelsExpandDepth(-1); // Disable the default expansion of models
+        c.EnableDeepLinking();      // Enable deep linking for tags and operations
+        //c.EnableFilter();           // Enable the filter feature in Swagger UI
+    });
 }
 
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -26,7 +26,8 @@ namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 
             if (detailsOrganizationViewModel == null)
             {
-                detailsOrganizationViewModel = mapper.Map<DetailsOrganizationViewModel>(await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken));
+                var organizationDb = await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                detailsOrganizationViewModel = mapper.Map<DetailsOrganizationViewModel>(organizationDb);
 
                 var expiriyDate = DateTimeOffset.Now.AddSeconds(30);
                 cacheService.SetData("organization_" + request.Id, detailsOrganizationViewModel, expiriyDate, cancellationToken);
