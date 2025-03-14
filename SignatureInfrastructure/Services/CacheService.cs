@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Caching.Distributed;
 using SignatureApplication.Common.Interfaces;
-using System.Text.Json;
 
 namespace SignatureInfrastructure.Services
 {
@@ -13,7 +13,7 @@ namespace SignatureInfrastructure.Services
             this.distributedCache = distributedCache;
         }
 
-        public T GetData<T>(string key, CancellationToken cancellationToken)
+        public T GetData<T>(string key)
         {
             var value = distributedCache.GetString(key);
 
@@ -25,19 +25,19 @@ namespace SignatureInfrastructure.Services
             return default;
         }
 
-        public async Task<T> GetDataAsync<T>(string key, CancellationToken cancellationToken) where T : class
+        public async Task<T> GetDataAsync<T>(string key, CancellationToken cancellationToken)
         {
-            var value = await distributedCache.GetStringAsync(key);
-
+            var value = await distributedCache.GetStringAsync(key, cancellationToken);
+            
             if (!string.IsNullOrEmpty(value))
             {
                 return JsonSerializer.Deserialize<T>(value);
             }
-
+            
             return default;
         }
 
-        public object RemoveData(string key, CancellationToken cancellationToken)
+        public object RemoveData(string key)
         {
             var exists = distributedCache.GetString(key);
 
@@ -48,14 +48,37 @@ namespace SignatureInfrastructure.Services
 
             return false;
         }
+        
+        public async Task<object> RemoveDataAsync(string key, CancellationToken cancellationToken)
+        {
+            var exists = await distributedCache.GetStringAsync(key, cancellationToken);
 
-        public bool SetData<T>(string key, T value, DateTimeOffset expirationTime, CancellationToken cancellationToken)
+            if (!string.IsNullOrEmpty(exists))
+            {
+                await distributedCache.RemoveAsync(key, cancellationToken);
+            }
+
+            return false;
+        }
+
+        public bool SetData<T>(string key, T value, DateTimeOffset expirationTime)
         {
             var expiryDate = expirationTime.DateTime.Subtract(DateTime.Now);
             distributedCache.SetString(key, JsonSerializer.Serialize(value), new DistributedCacheEntryOptions()
             {
                 AbsoluteExpirationRelativeToNow = expiryDate,
             });
+
+            return true;
+        }
+        
+        public async Task<bool> SetDataAsync<T>(string key, T value, DateTimeOffset expirationTime, CancellationToken cancellationToken)
+        {
+            var expiryDate = expirationTime.DateTime.Subtract(DateTime.Now);
+            await distributedCache.SetStringAsync(key, JsonSerializer.Serialize(value), new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = expiryDate,
+            }, cancellationToken);
 
             return true;
         }

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Users.ViewModels;
@@ -20,28 +19,30 @@ namespace SignatureApplication.Users.Query.GetUserUpdate
         public async Task<UpdateUserViewModel> Handle(GetUserUpdateQuery request, CancellationToken cancellationToken)
         {
 
-            UpdateUserViewModel updateUserViewModel = cacheService.GetData<UpdateUserViewModel>("user_" + request.Id, cancellationToken);
+            UpdateUserViewModel updateUserViewModel = await cacheService.GetDataAsync<UpdateUserViewModel>("user_" + request.Id, cancellationToken);
 
             if(updateUserViewModel == null)
             {
-                updateUserViewModel = await signatureDbContext.Users
-                .Where(x => x.Id == request.Id)
-                .Select(x => new UpdateUserViewModel()
-                {
-                    Id = request.Id,
-                    Address = x.Address,
-                    DateOfBirth = x.DateOfBirth,
-                    Email = x.Email,
-                    FirstName = x.FirstName,
-                    Gender = x.Gender,
-                    IDNP = x.IDNP,
-                    LastName = x.LastName,
-                    PhoneNumber = x.PhoneNumber,
-                    Status = x.Status,
-                }).FirstOrDefaultAsync();
+                // updateUserViewModel = await signatureDbContext.Users
+                // .Where(x => x.Id == request.Id)
+                // .Select(x => new UpdateUserViewModel()
+                // {
+                //     Id = request.Id,
+                //     Address = x.Address,
+                //     DateOfBirth = x.DateOfBirth,
+                //     Email = x.Email,
+                //     FirstName = x.FirstName,
+                //     Gender = x.Gender,
+                //     IDNP = x.IDNP,
+                //     LastName = x.LastName,
+                //     PhoneNumber = x.PhoneNumber,
+                //     Status = x.Status,
+                // }).FirstOrDefaultAsync();
+                
+                updateUserViewModel = null;
 
                 var expiryDate = DateTimeOffset.Now.AddSeconds(30);
-                cacheService.SetData("user_" + request.Id, updateUserViewModel, expiryDate, cancellationToken);
+                await cacheService.SetDataAsync("user_" + request.Id, updateUserViewModel, expiryDate, cancellationToken);
             }
 
             return updateUserViewModel;

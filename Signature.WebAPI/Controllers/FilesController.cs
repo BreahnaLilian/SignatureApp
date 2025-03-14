@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SignatureApplication.Files.ViewModels;
 
 namespace Signature.WebAPI.Controllers;
 
@@ -40,18 +41,17 @@ public class FilesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFile(IFormFile formFile)
+    public async Task<IActionResult> CreateFile(CreateFileViewModel createFileViewModel)
     {
         try
         {
-            if (formFile.Length > 0)
+            if (createFileViewModel.File != null)
             {
                 var filePath = Path.GetTempFileName();
 
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
+                await using var stream = System.IO.File.Create(filePath);
+                await createFileViewModel.File.CopyToAsync(stream);
+                
             }
 
             throw new NotImplementedException();

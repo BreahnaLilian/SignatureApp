@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using Serilog;
 using Signature.WebAPI.API;
@@ -5,7 +6,6 @@ using Signature.WebAPI.Swagger;
 using SignatureApplication;
 using SignatureInfrastructure;
 using SignaturePersistance;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
     .AddSwagger()
-    .AddApiKeyBehavior()
+    // .AddApiKeyBehavior()
     //.AddBasicAuthApiBehavior()
     .AddApplication()
     .AddInfrastructure()
@@ -45,6 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
+        //c.MaxDisplayedTags();
+        //c.ShowExtensions();
         c.DisplayRequestDuration(); // This shows request duration in the UI
         c.ShowExtensions();         // This shows extensions (e.g., `x-` fields)
         c.DefaultModelsExpandDepth(-1); // Disable the default expansion of models

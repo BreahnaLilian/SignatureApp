@@ -22,7 +22,7 @@ public class OrganizationsController : BaseController
         try
         {
             List<OrganizationVm> organizationList = await mediator.Send(new GetOrganizationListQuery() { }, cancellationToken);
-            return CreateJsonOk(organizationList);
+            return CreateJsonCollectionOk(organizationList);
         }
         catch (Exception ex)
         {

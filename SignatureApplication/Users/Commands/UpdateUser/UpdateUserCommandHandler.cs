@@ -1,46 +1,46 @@
 ﻿using AutoMapper;
+using LinqToDB;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Users.ViewModels;
+using SignatureCommon.Models.Exception;
 using SignatureDomain.Entities;
 
 namespace SignatureApplication.Users.Commands.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserViewModel>
     {
-        private readonly ISignatureDbContext signatureDbContext;
-        private readonly ICacheService cacheService;
-        private readonly IMapper mapper;
+        private readonly ISignatureDbContext _signatureDbContext;
+        private readonly ICacheService _cacheService;
+        private readonly IMapper _mapper;
 
         public UpdateUserCommandHandler(ISignatureDbContext signatureDbContext, ICacheService cacheService, IMapper mapper)
         {
-            this.signatureDbContext = signatureDbContext;
-            this.cacheService = cacheService;
-            this.mapper = mapper;
+            _signatureDbContext = signatureDbContext;
+            _cacheService = cacheService;
+            _mapper = mapper;
         }
 
         async Task IRequestHandler<UpdateUserViewModel>.Handle(UpdateUserViewModel request, CancellationToken cancellationToken)
         {
             string email = request.Email.Trim().ToLower();
-
-            User existingUser = await signatureDbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Trim() == email, cancellationToken);
+            
+            User existingUser = await _signatureDbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
             if (existingUser == null)
             {
-                throw new NotImplementedException();
+                throw new UserNotExistException(email);
             }
 
-            User user = mapper.Map<User>(request);
+            User user = _mapper.Map<User>(request);
 
-            cacheService.RemoveData("users", cancellationToken);
-            cacheService.RemoveData("user_" + request.Id, cancellationToken);
+            await _cacheService.RemoveDataAsync("users", cancellationToken);
+            await _cacheService.RemoveDataAsync("user_" + request.Id, cancellationToken);
 
-            signatureDbContext.Entry(user).State = EntityState.Modified;
-            await signatureDbContext.SaveChangesAsync(cancellationToken);
+            await _signatureDbContext.UpdateAsync(user, cancellationToken);
 
             var expiryDate = DateTimeOffset.Now.AddSeconds(30);
-            cacheService.SetData("user_" + request.Id, request, expiryDate, cancellationToken);
+            await _cacheService.SetDataAsync("user_" + request.Id, request, expiryDate, cancellationToken);
         }
     }
 }

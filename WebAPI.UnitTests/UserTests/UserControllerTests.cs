@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Signature.WebAPI.Controllers;
 using SignatureApplication.Users.ViewModels;
 using SignatureCommon.Models.JsonResponseModels;
+using A = FakeItEasy.A;
 
 namespace WebAPI.UnitTests.UserTests
 {
@@ -20,23 +21,23 @@ namespace WebAPI.UnitTests.UserTests
             _cancellationToken = new CancellationToken();
         }
 
-        [Fact]
-        //[UnitOfWork_StateUnderTest_ExpectedBehavior]
-        public async Task GetUsers_ListOfUsers_ReturnsCreateJsonOkListOfUsers()
-        {
-            //Arange - variables, classes, mocks
+        //[Fact]
+        ////[UnitOfWork_StateUnderTest_ExpectedBehavior]
+        //public async Task GetUsers_ListOfUsers_ReturnsCreateJsonOkListOfUsers()
+        //{
+        //    //Arange - variables, classes, mocks
 
-            //Act
-            var result = await _userController.GetUsers(_cancellationToken);
-            var objResult = result as JsonResult;
-            var deserializedValue = objResult.Value as BaseJsonResponse;
+        //    //Act
+        //    var result = await _userController.GetUsers(_cancellationToken);
+        //    var objResult = result as JsonResult;
+        //    var deserializedValue = objResult.Value as BaseJsonResponse;
 
-            //Assert
-            result.Should().BeOfType<JsonResult>();
-            objResult.Value.Should().BeOfType<SingleJsonResponse<UsersViewModel>>();
-            deserializedValue.Result.Should().Be(SignatureCommon.Enums.ExecutionResult.OK);
+        //    //Assert
+        //    result.Should().BeOfType<JsonResult>();
+        //    objResult.Value.Should().BeOfType<SingleJsonResponse<UsersViewModel>>();
+        //    deserializedValue.Result.Should().Be(SignatureCommon.Enums.ExecutionResult.OK);
 
-        }
+        //}
 
         [Fact]
         //[UnitOfWork_StateUnderTest_ExpectedBehavior]

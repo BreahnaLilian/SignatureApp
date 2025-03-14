@@ -22,7 +22,7 @@ public class UsersController : BaseController
         try
         {
             List<UserVm> usersListViewModel = await mediator.Send(new GetUserListQuery() { }, cancellationToken);
-            return CreateJsonOk(usersListViewModel);
+            return CreateJsonCollectionOk(usersListViewModel);
         }
         catch (Exception ex)
         {

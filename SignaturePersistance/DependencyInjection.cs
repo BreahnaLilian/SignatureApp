@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LinqToDB;
+using LinqToDB.AspNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SignatureApplication.Common;
@@ -9,18 +10,16 @@ namespace SignaturePersistance
     {
         public static IServiceCollection AddPersitance(this IServiceCollection services, IConfiguration configuration)
         {
-
-            services.AddDbContext<SignatureDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("SignatureDatabase")));
-
-            //if (!string.IsNullOrWhiteSpace(configuration.GetConnectionString("SignatureDatabasePostgreSQL")))
-            //{
-            //    services.AddDbContext<SignatureDbContext>(options =>
-            //    options.UseNpgsql(configuration.GetConnectionString("SignatureDatabasePostgreSQL")));
-            //}
+            string connectionStringSql = configuration.GetConnectionString("SignatureDatabase");
+            string connectionStringCache = configuration.GetConnectionString("SignatureCache");
+            
+            services.AddLinqToDBContext<SignatureDbContext>((_, options) =>
+                options
+                    .UseSqlServer(connectionStringSql!));
+                // .UseDefaultLogging(provider));
 
             services.AddStackExchangeRedisCache(options =>
-            options.Configuration = configuration.GetConnectionString("SignatureCache"));
+                options.Configuration = connectionStringCache);
 
             services.AddScoped<ISignatureDbContext>(provider => provider.GetService<SignatureDbContext>());
 

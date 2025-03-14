@@ -35,7 +35,5 @@ namespace Signature.WebAPI.Controllers
 
             return CreateJsonOk(user);
         }
-
-
     }
 }

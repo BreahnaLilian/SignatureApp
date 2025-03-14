@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using System.Text.Encodings.Web;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using SignatureApplication.Organizations.Query.GetOrganizationByApiKey;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
 
 namespace Signature.WebAPI.API;
 

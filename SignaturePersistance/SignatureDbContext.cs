@@ -1,64 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LinqToDB;
+using LinqToDB.Data;
 using SignatureApplication.Common;
 using SignatureDomain.Common;
 using SignatureDomain.Entities;
+using File = SignatureDomain.Entities.File;
 
 namespace SignaturePersistance
 {
-    public class SignatureDbContext : DbContext, ISignatureDbContext
+    public class SignatureDbContext(DataOptions<SignatureDbContext> options)
+        : DataConnection(options.Options), ISignatureDbContext
     {
-        public SignatureDbContext(DbContextOptions<SignatureDbContext> options) : base(options) { }
-
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<SignatureDomain.Entities.File> Files { get; set; }
-        public DbSet<SignatureFilesToUsers> SignatureFilesToUsers { get; set; }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public ITable<User> Users => this.GetTable<User>();
+        public ITable<File> Files => this.GetTable<File>();
+        public ITable<Organization> Organizations => this.GetTable<Organization>();
+        public ITable<SignatureFilesToUsers> SignatureFilesToUsers => this.GetTable<SignatureFilesToUsers>();
+        public async Task<int> InsertAsync<T>(T entity, CancellationToken cancellationToken) where T : class
         {
-            foreach (var entry in base.ChangeTracker.Entries<BaseEntity>())
-            {
-                if (entry.Entity is AuditableEntity auditable)
-                {
-                    switch (entry.State)
-                    {
-                        case EntityState.Added:
-                            auditable.CreateDate = DateTime.Now;
-                            break;
-
-                        case EntityState.Modified:
-                            auditable.LastModified = DateTime.Now;
-                            break;
-                    }
-                }
-
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.Id = Guid.NewGuid();
-                        break;
-                }
-            }
-
-            return base.SaveChangesAsync(cancellationToken);
+            HandleAuditableEntity(entity, true, cancellationToken);
+            return await this.InsertAsync(entity);
         }
 
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : class
         {
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
-
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SignatureDbContext).Assembly);
+            HandleAuditableEntity(entity, false, cancellationToken);
+            return await this.UpdateAsync(entity);
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        
+        private void HandleAuditableEntity<T>(T entity, bool isInsert, CancellationToken cancellationToken) where T : class
         {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.EnableSensitiveDataLogging(true);
+            if (entity is AuditableEntity auditable)
+            {
+                if (isInsert)
+                {
+                    auditable.CreateDate = DateTime.UtcNow;
+                    auditable.Id = Guid.NewGuid();
+                }
+                else
+                {
+                    auditable.LastModified = DateTime.UtcNow;
+                }
+            }
         }
     }
 }

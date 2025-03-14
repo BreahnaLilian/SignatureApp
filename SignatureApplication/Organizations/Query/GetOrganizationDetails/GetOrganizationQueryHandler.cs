@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using LinqToDB;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Organizations.ViewModels;
+using SignatureDomain.Entities;
 
 namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 {
@@ -22,15 +23,15 @@ namespace SignatureApplication.Organizations.Query.GetOrganizationDetails
 
         public async Task<DetailsOrganizationViewModel> Handle(GetOrganizationDetailsQuery request, CancellationToken cancellationToken)
         {
-            DetailsOrganizationViewModel detailsOrganizationViewModel = cacheService.GetData<DetailsOrganizationViewModel>("organization_" + request.Id, cancellationToken);
+            DetailsOrganizationViewModel detailsOrganizationViewModel = await cacheService.GetDataAsync<DetailsOrganizationViewModel>("organization_" + request.Id, cancellationToken);
 
             if (detailsOrganizationViewModel == null)
             {
-                var organizationDb = await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                Organization organizationDb = await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 detailsOrganizationViewModel = mapper.Map<DetailsOrganizationViewModel>(organizationDb);
 
                 var expiriyDate = DateTimeOffset.Now.AddSeconds(30);
-                cacheService.SetData("organization_" + request.Id, detailsOrganizationViewModel, expiriyDate, cancellationToken);
+                await cacheService.SetDataAsync("organization_" + request.Id, detailsOrganizationViewModel, expiriyDate, cancellationToken);
             }
 
             return detailsOrganizationViewModel;

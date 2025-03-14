@@ -9,4 +9,8 @@
     <ProjectReference Include="..\SignatureCommon\SignatureCommon.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="linq2db" Version="5.4.1" />
+  </ItemGroup>
+
 </Project>

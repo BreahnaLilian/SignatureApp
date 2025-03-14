@@ -1,11 +1,11 @@
-﻿using SignatureApplication.Common.Interfaces;
-using SignatureApplication.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using SignatureApplication.Common;
+using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Files.ViewModels;
 
 namespace SignatureApplication.Files.Commands.CreateFile

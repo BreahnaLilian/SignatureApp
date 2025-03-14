@@ -1,11 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SignatureApplication.Common;
 using SignatureApplication.Common.Interfaces;
 using SignatureApplication.Organizations.ViewModels;
 using SignatureDomain.Entities;
-using System.Text;
 
 namespace SignatureApplication.Organizations.Commands.CreateOrganization
 {
@@ -24,7 +23,8 @@ namespace SignatureApplication.Organizations.Commands.CreateOrganization
 
         async Task IRequestHandler<CreateOrganizationViewModel>.Handle(CreateOrganizationViewModel request, CancellationToken cancellationToken)
         {
-            Organization existingOrganization = await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.IDNO == request.IDNO, cancellationToken);
+            // Organization existingOrganization = await signatureDbContext.Organizations.FirstOrDefaultAsync(x => x.IDNO == request.IDNO, cancellationToken);
+            Organization existingOrganization = null;
             if(existingOrganization != null)
             {
                 throw new NotImplementedException();
@@ -37,10 +37,10 @@ namespace SignatureApplication.Organizations.Commands.CreateOrganization
             //decoding Encoding.UTF8.GetString(System.Convert.FromBase64String(ApiKey))
             organization.Status = SignatureCommon.Enums.OrganizationStatus.New;
 
-            cacheService.RemoveData("organizations", cancellationToken);
+            await cacheService.RemoveDataAsync("organizations", cancellationToken);
 
-            signatureDbContext.Entry(organization).State = EntityState.Added;
-            await signatureDbContext.SaveChangesAsync(cancellationToken);
+            // signatureDbContext.Entry(organization).State = EntityState.Added;
+            // await signatureDbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

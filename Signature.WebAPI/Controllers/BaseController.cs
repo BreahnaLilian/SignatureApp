@@ -25,7 +25,7 @@ public class BaseController : Controller
         return Json(new SingleJsonResponse<T> { Result = ExecutionResult.OK, Message = message, ShowToast = showToast, Item = record });
     }
 
-    protected virtual IActionResult CreateJsonOk<T>(IEnumerable<T> records, string message = null, bool showToast = false) where T : class
+    protected virtual IActionResult CreateJsonCollectionOk<T>(IEnumerable<T> records, string message = null, bool showToast = false) where T : class
     {
         return Json(new CollectionJsonResponse<T> { Result = ExecutionResult.OK, Message = message, ShowToast = showToast, Items = records });
     }
